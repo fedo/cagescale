@@ -147,19 +147,24 @@ export function WeightFinderPanel() {
         <div>
           <Label className="mb-2 block">Division ladder</Label>
           <div className="inline-flex items-center rounded-md border border-border bg-muted p-1">
-            {(['men', 'women'] as const).map((option) => (
+            {(
+              [
+                { id: 'men', label: 'Men' },
+                { id: 'women', label: 'Women' },
+              ] as const
+            ).map((option) => (
               <Button
-                key={option}
+                key={option.id}
                 type="button"
                 size="sm"
                 variant="ghost"
                 className={cn(
-                  'h-8 min-w-16 capitalize',
-                  gender === option && 'bg-card text-foreground shadow-sm',
+                  'h-8 min-w-16',
+                  gender === option.id && 'bg-card text-foreground shadow-sm',
                 )}
-                onClick={() => setGender(option)}
+                onClick={() => setGender(option.id)}
               >
-                {option}
+                {option.label}
               </Button>
             ))}
           </div>
@@ -169,10 +174,11 @@ export function WeightFinderPanel() {
       {neighborhood && weightKg != null ? (
         <section className="space-y-3">
           <h2 className="font-display text-2xl text-foreground">Your class</h2>
-          {neighborhood.overHeavy ? (
+          {neighborhood.overHeavy && ladder.length > 0 ? (
             <p className="text-sm text-muted-foreground">
-              Above heavyweight limit ({formatDualFromLb(ladder[ladder.length - 1]!.limitLb)}).
-              Still eligible for heavyweight if under the commission rules for the bout.
+              Above {ladder[ladder.length - 1]!.name} limit (
+              {formatDualFromLb(ladder[ladder.length - 1]!.limitLb)}). For men&apos;s
+              heavyweight, athletes may still compete up to that division&apos;s ceiling.
             </p>
           ) : null}
 
