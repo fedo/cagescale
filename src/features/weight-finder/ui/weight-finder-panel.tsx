@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useState, type ReactNode } from 'react'
 import { useGender } from '@/app/providers/gender-provider'
 import { useWeightUnit } from '@/app/providers/weight-unit-provider'
 import {
@@ -10,7 +10,6 @@ import { kgToLb, lbToKg, roundWeight } from '@/shared/lib/units'
 import { DualWeightFromKg, DualWeightFromLb, DualWeightRange } from '@/shared/ui/dual-weight'
 import { Input } from '@/shared/ui/input'
 import { Label } from '@/shared/ui/label'
-import { Badge } from '@/shared/ui/badge'
 import { cn } from '@/shared/lib/cn'
 
 function ClassColumn({
@@ -51,6 +50,31 @@ function ClassColumn({
       ) : (
         <p className="mt-2 text-xs text-muted-foreground">—</p>
       )}
+    </div>
+  )
+}
+
+function EstimateColumn({
+  label,
+  period,
+  children,
+  note,
+}: {
+  label: string
+  period: string
+  children: ReactNode
+  note?: string
+}) {
+  return (
+    <div className="flex min-h-full flex-col rounded-md bg-muted/60 px-2 py-3 sm:px-3">
+      <p className="text-[0.65rem] font-semibold uppercase leading-tight tracking-wide text-muted-foreground sm:text-xs">
+        {label}
+      </p>
+      <p className="mt-1 text-[0.65rem] font-medium text-muted-foreground">{period}</p>
+      <div className="mt-2 text-xs leading-snug text-muted-foreground">{children}</div>
+      {note ? (
+        <p className="mt-2 text-[0.65rem] leading-snug text-muted-foreground">{note}</p>
+      ) : null}
     </div>
   )
 }
@@ -166,71 +190,57 @@ export function WeightFinderPanel() {
           <div>
             <h2 className="font-display text-2xl text-foreground">Estimates</h2>
             <p className="mt-1 text-xs text-muted-foreground">
-              Approximate natural-athlete ranges — not coaching or medical advice.
+              Approximate natural-athlete ranges — not medical advice.
             </p>
           </div>
 
-          <div className="space-y-2">
-            <div className="rounded-md bg-muted/60 px-3 py-3">
-              <div className="flex items-center justify-between gap-2">
-                <p className="text-sm font-semibold">Possible bulking gains</p>
-                <Badge variant="secondary">/ month</Badge>
-              </div>
-              <p className="mt-1 text-sm text-muted-foreground">
-                <DualWeightRange
-                  kgMin={estimates.bulkMonthlyKg.min}
-                  kgMax={estimates.bulkMonthlyKg.max}
-                  lbMin={estimates.bulkMonthlyLb.min}
-                  lbMax={estimates.bulkMonthlyLb.max}
-                />
-              </p>
-              {estimates.monthsToAboveClass != null ? (
-                <p className="mt-2 text-xs text-muted-foreground">
-                  ~{estimates.monthsToAboveClass} months of lean gain to approach the
-                  class above (very rough).
-                </p>
-              ) : null}
-            </div>
+          <div className="grid grid-cols-3 gap-2">
+            <EstimateColumn
+              label="Bulk"
+              period="/ month"
+              note={
+                estimates.monthsToAboveClass != null
+                  ? `~${estimates.monthsToAboveClass} mo to class above`
+                  : undefined
+              }
+            >
+              <DualWeightRange
+                kgMin={estimates.bulkMonthlyKg.min}
+                kgMax={estimates.bulkMonthlyKg.max}
+                lbMin={estimates.bulkMonthlyLb.min}
+                lbMax={estimates.bulkMonthlyLb.max}
+              />
+            </EstimateColumn>
 
-            <div className="rounded-md bg-muted/60 px-3 py-3">
-              <div className="flex items-center justify-between gap-2">
-                <p className="text-sm font-semibold">Weight loss pace</p>
-                <Badge variant="secondary">/ week</Badge>
-              </div>
-              <p className="mt-1 text-sm text-muted-foreground">
-                <DualWeightRange
-                  kgMin={estimates.cutWeeklyKg.min}
-                  kgMax={estimates.cutWeeklyKg.max}
-                  lbMin={estimates.cutWeeklyLb.min}
-                  lbMax={estimates.cutWeeklyLb.max}
-                />
-              </p>
-              {estimates.weeksToBelowClass != null ? (
-                <p className="mt-2 text-xs text-muted-foreground">
-                  ~{estimates.weeksToBelowClass} weeks of fat loss to reach the limit of
-                  the class below (ignoring water cut).
-                </p>
-              ) : null}
-            </div>
+            <EstimateColumn
+              label="Cut"
+              period="/ week"
+              note={
+                estimates.weeksToBelowClass != null
+                  ? `~${estimates.weeksToBelowClass} wk to class below`
+                  : undefined
+              }
+            >
+              <DualWeightRange
+                kgMin={estimates.cutWeeklyKg.min}
+                kgMax={estimates.cutWeeklyKg.max}
+                lbMin={estimates.cutWeeklyLb.min}
+                lbMax={estimates.cutWeeklyLb.max}
+              />
+            </EstimateColumn>
 
-            <div className="rounded-md bg-muted/60 px-3 py-3">
-              <div className="flex items-center justify-between gap-2">
-                <p className="text-sm font-semibold">Fight-week dehydration</p>
-                <Badge variant="outline">acute</Badge>
-              </div>
-              <p className="mt-1 text-sm text-muted-foreground">
-                <DualWeightRange
-                  kgMin={estimates.dehydrationKg.min}
-                  kgMax={estimates.dehydrationKg.max}
-                  lbMin={estimates.dehydrationLb.min}
-                  lbMax={estimates.dehydrationLb.max}
-                />
-              </p>
-              <p className="mt-2 text-xs text-muted-foreground">
-                Typical 2–5% bodyweight water cut range seen in combat sports. High risk;
-                shown for education only.
-              </p>
-            </div>
+            <EstimateColumn
+              label="Dehydrate"
+              period="fight week"
+              note="2–5% bodyweight; high risk"
+            >
+              <DualWeightRange
+                kgMin={estimates.dehydrationKg.min}
+                kgMax={estimates.dehydrationKg.max}
+                lbMin={estimates.dehydrationLb.min}
+                lbMax={estimates.dehydrationLb.max}
+              />
+            </EstimateColumn>
           </div>
         </section>
       ) : null}

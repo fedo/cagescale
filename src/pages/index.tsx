@@ -1,6 +1,7 @@
 import { useQuery } from '@tanstack/react-query'
 import { createFileRoute } from '@tanstack/react-router'
-import { useEffect, useMemo } from 'react'
+import { useEffect, useMemo, useState } from 'react'
+import type { WeightClassId } from '@/entities/weight-class/model/types'
 import { useGender } from '@/app/providers/gender-provider'
 import {
   getWeightClasses,
@@ -24,6 +25,12 @@ function WeightClassesPage() {
     () => data?.filter((wc) => wc.gender === gender) ?? [],
     [data, gender],
   )
+
+  const [expandedId, setExpandedId] = useState<WeightClassId | null>(null)
+
+  useEffect(() => {
+    setExpandedId(null)
+  }, [gender])
 
   useEffect(() => {
     const hash = window.location.hash.replace('#', '')
@@ -54,7 +61,15 @@ function WeightClassesPage() {
       <div>
         {divisions.map((weightClass) => (
           <div key={weightClass.id} id={weightClass.id}>
-            <WeightClassSection weightClass={weightClass} />
+            <WeightClassSection
+              weightClass={weightClass}
+              expanded={expandedId === weightClass.id}
+              onToggle={() =>
+                setExpandedId((current) =>
+                  current === weightClass.id ? null : weightClass.id,
+                )
+              }
+            />
           </div>
         ))}
       </div>
