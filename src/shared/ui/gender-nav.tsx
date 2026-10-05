@@ -7,7 +7,7 @@ export function GenderNav() {
 
   return (
     <nav
-      className="flex rounded-md border border-border bg-muted p-1"
+      className="inline-flex rounded-md border border-border bg-muted p-0.5"
       aria-label="Men's or women's divisions"
     >
       {(
@@ -22,7 +22,7 @@ export function GenderNav() {
           size="sm"
           variant="ghost"
           className={cn(
-            'h-9 flex-1 font-semibold',
+            'h-8 min-w-[3.25rem] px-2.5 text-xs font-semibold sm:min-w-14 sm:text-sm',
             gender === option.id && 'bg-card text-foreground shadow-sm',
           )}
           onClick={() => setGender(option.id)}

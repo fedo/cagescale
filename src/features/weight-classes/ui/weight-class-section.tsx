@@ -16,7 +16,7 @@ export function WeightClassSection({ weightClass }: WeightClassSectionProps) {
   const hasCurrent = weightClass.recentChampions.some((c) => c.isCurrent)
 
   return (
-    <section className="scroll-mt-36 animate-rise border-b border-border/70 py-4 last:border-b-0">
+    <section className="scroll-mt-28 animate-rise border-b border-border/70 py-4 last:border-b-0">
       <button
         type="button"
         aria-expanded={open}

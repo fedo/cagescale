@@ -16,8 +16,8 @@ export function AppShell({ children }: { children: ReactNode }) {
     <div className="mx-auto flex min-h-dvh w-full max-w-lg flex-col sm:max-w-2xl">
       <header className="fixed inset-x-0 top-0 z-30 border-b border-border/80 bg-card/95 backdrop-blur-md">
         <div className="mx-auto max-w-lg px-4 pb-3 pt-3 sm:max-w-2xl sm:px-6">
-          <div className="flex items-end justify-between gap-4">
-            <div>
+          <div className="flex items-start justify-between gap-3">
+            <div className="min-w-0">
               <p className="font-display text-3xl leading-none text-foreground sm:text-4xl">
                 CageScale
               </p>
@@ -25,21 +25,16 @@ export function AppShell({ children }: { children: ReactNode }) {
                 UFC weight classes, champions & cuts
               </p>
             </div>
+            {showGenderNav ? (
+              <div className="shrink-0 pt-0.5">
+                <GenderNav />
+              </div>
+            ) : null}
           </div>
-          {showGenderNav ? (
-            <div className="mt-3">
-              <GenderNav />
-            </div>
-          ) : null}
         </div>
       </header>
 
-      <main
-        className={cn(
-          'flex-1 px-4 pb-24 pt-4 sm:px-6',
-          showGenderNav ? 'pt-[8.75rem] sm:pt-[9rem]' : 'pt-[5.25rem] sm:pt-[5.5rem]',
-        )}
-      >
+      <main className="flex-1 px-4 pb-24 pt-[5.5rem] sm:px-6 sm:pt-[5.75rem]">
         {children}
       </main>
 
