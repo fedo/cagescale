@@ -1,24 +1,17 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { useGender } from '@/app/providers/gender-provider'
+import { useWeightUnit } from '@/app/providers/weight-unit-provider'
 import {
   classesForGender,
   findWeightClassNeighborhood,
 } from '@/entities/weight-class/lib/find-class'
 import { estimateBodyComp } from '@/features/weight-finder/lib/estimates'
-import {
-  formatDualFromKg,
-  formatDualFromLb,
-  kgToLb,
-  lbToKg,
-  roundWeight,
-} from '@/shared/lib/units'
+import { kgToLb, lbToKg, roundWeight } from '@/shared/lib/units'
+import { DualWeightFromKg, DualWeightFromLb, DualWeightRange } from '@/shared/ui/dual-weight'
 import { Input } from '@/shared/ui/input'
 import { Label } from '@/shared/ui/label'
 import { Badge } from '@/shared/ui/badge'
-import { Button } from '@/shared/ui/button'
 import { cn } from '@/shared/lib/cn'
-
-type Unit = 'kg' | 'lb'
 
 function ClassColumn({
   label,
@@ -51,9 +44,9 @@ function ClassColumn({
           <p className="font-display mt-1.5 text-sm leading-tight text-foreground sm:text-base">
             {name}
           </p>
-          <p className="mt-1 text-[0.7rem] leading-snug text-muted-foreground sm:text-xs">
-            {formatDualFromLb(limitLb)}
-          </p>
+          <div className="mt-1">
+            <DualWeightFromLb limitLb={limitLb} />
+          </div>
         </>
       ) : (
         <p className="mt-2 text-xs text-muted-foreground">—</p>
@@ -64,7 +57,7 @@ function ClassColumn({
 
 export function WeightFinderPanel() {
   const { gender } = useGender()
-  const [unit, setUnit] = useState<Unit>('kg')
+  const { unit } = useWeightUnit()
   const [raw, setRaw] = useState('77')
 
   const parsed = Number.parseFloat(raw)
@@ -79,6 +72,15 @@ export function WeightFinderPanel() {
     if (weightKg == null) return null
     return kgToLb(weightKg)
   }, [weightKg])
+
+  useEffect(() => {
+    if (weightKg == null) return
+    setRaw(
+      String(unit === 'kg' ? roundWeight(weightKg) : roundWeight(kgToLb(weightKg))),
+    )
+    // Convert displayed input when header unit toggles
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- unit only
+  }, [unit])
 
   const neighborhood = useMemo(() => {
     if (weightLb == null) return null
@@ -100,41 +102,11 @@ export function WeightFinderPanel() {
   return (
     <div className="animate-rise space-y-6">
       <section className="space-y-4">
-        <div className="flex flex-wrap items-center justify-between gap-3">
-          <div>
-            <Label htmlFor="weight">Your weight</Label>
-            <p className="mt-1 text-xs text-muted-foreground">
-              Always shown in kg and lb
-            </p>
-          </div>
-          <div className="inline-flex items-center rounded-md border border-border bg-muted p-1">
-            {(['kg', 'lb'] as const).map((option) => (
-              <Button
-                key={option}
-                type="button"
-                size="sm"
-                variant="ghost"
-                className={cn(
-                  'h-8 min-w-12',
-                  unit === option && 'bg-card text-foreground shadow-sm',
-                )}
-                onClick={() => {
-                  if (weightKg != null) {
-                    setRaw(
-                      String(
-                        option === 'kg'
-                          ? roundWeight(weightKg)
-                          : roundWeight(kgToLb(weightKg)),
-                      ),
-                    )
-                  }
-                  setUnit(option)
-                }}
-              >
-                {option}
-              </Button>
-            ))}
-          </div>
+        <div>
+          <Label htmlFor="weight">Your weight ({unit})</Label>
+          <p className="mt-1 text-xs text-muted-foreground">
+            Both units shown below — primary from header toggle
+          </p>
         </div>
 
         <Input
@@ -149,9 +121,7 @@ export function WeightFinderPanel() {
         />
 
         {weightKg != null && weightLb != null ? (
-          <p className="text-sm font-medium text-foreground">
-            {formatDualFromKg(weightKg)}
-          </p>
+          <DualWeightFromKg weightKg={weightKg} size="base" />
         ) : (
           <p className="text-sm text-muted-foreground">Enter a valid weight.</p>
         )}
@@ -162,8 +132,8 @@ export function WeightFinderPanel() {
           <h2 className="font-display text-2xl text-foreground">Your class</h2>
           {neighborhood.overHeavy && ladder.length > 0 ? (
             <p className="text-sm text-muted-foreground">
-              Above {ladder[ladder.length - 1]!.name} limit (
-              {formatDualFromLb(ladder[ladder.length - 1]!.limitLb)}).
+              Above {ladder[ladder.length - 1]!.name} limit{' '}
+              <DualWeightFromLb limitLb={ladder[ladder.length - 1]!.limitLb} />.
             </p>
           ) : null}
 
@@ -207,8 +177,12 @@ export function WeightFinderPanel() {
                 <Badge variant="secondary">/ month</Badge>
               </div>
               <p className="mt-1 text-sm text-muted-foreground">
-                {estimates.bulkMonthlyKg.min}–{estimates.bulkMonthlyKg.max} kg /{' '}
-                {estimates.bulkMonthlyLb.min}–{estimates.bulkMonthlyLb.max} lb
+                <DualWeightRange
+                  kgMin={estimates.bulkMonthlyKg.min}
+                  kgMax={estimates.bulkMonthlyKg.max}
+                  lbMin={estimates.bulkMonthlyLb.min}
+                  lbMax={estimates.bulkMonthlyLb.max}
+                />
               </p>
               {estimates.monthsToAboveClass != null ? (
                 <p className="mt-2 text-xs text-muted-foreground">
@@ -224,8 +198,12 @@ export function WeightFinderPanel() {
                 <Badge variant="secondary">/ week</Badge>
               </div>
               <p className="mt-1 text-sm text-muted-foreground">
-                {estimates.cutWeeklyKg.min}–{estimates.cutWeeklyKg.max} kg /{' '}
-                {estimates.cutWeeklyLb.min}–{estimates.cutWeeklyLb.max} lb
+                <DualWeightRange
+                  kgMin={estimates.cutWeeklyKg.min}
+                  kgMax={estimates.cutWeeklyKg.max}
+                  lbMin={estimates.cutWeeklyLb.min}
+                  lbMax={estimates.cutWeeklyLb.max}
+                />
               </p>
               {estimates.weeksToBelowClass != null ? (
                 <p className="mt-2 text-xs text-muted-foreground">
@@ -241,8 +219,12 @@ export function WeightFinderPanel() {
                 <Badge variant="outline">acute</Badge>
               </div>
               <p className="mt-1 text-sm text-muted-foreground">
-                {estimates.dehydrationKg.min}–{estimates.dehydrationKg.max} kg /{' '}
-                {estimates.dehydrationLb.min}–{estimates.dehydrationLb.max} lb
+                <DualWeightRange
+                  kgMin={estimates.dehydrationKg.min}
+                  kgMax={estimates.dehydrationKg.max}
+                  lbMin={estimates.dehydrationLb.min}
+                  lbMax={estimates.dehydrationLb.max}
+                />
               </p>
               <p className="mt-2 text-xs text-muted-foreground">
                 Typical 2–5% bodyweight water cut range seen in combat sports. High risk;

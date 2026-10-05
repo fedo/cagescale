@@ -1,6 +1,6 @@
 import { Link, useRouterState } from '@tanstack/react-router'
 import type { ReactNode } from 'react'
-import { GenderNav } from '@/shared/ui/gender-nav'
+import { HeaderControls } from '@/shared/ui/header-controls'
 import { cn } from '@/shared/lib/cn'
 
 const nav = [
@@ -10,7 +10,7 @@ const nav = [
 
 export function AppShell({ children }: { children: ReactNode }) {
   const pathname = useRouterState({ select: (s) => s.location.pathname })
-  const showGenderNav = pathname === '/' || pathname === '/weight-finder'
+  const showHeaderControls = pathname === '/' || pathname === '/weight-finder'
 
   return (
     <div className="mx-auto flex min-h-dvh w-full max-w-lg flex-col sm:max-w-2xl">
@@ -25,9 +25,9 @@ export function AppShell({ children }: { children: ReactNode }) {
                 UFC weight classes, champions & cuts
               </p>
             </div>
-            {showGenderNav ? (
-              <div className="shrink-0 pt-0.5">
-                <GenderNav />
+            {showHeaderControls ? (
+              <div className="pt-0.5">
+                <HeaderControls />
               </div>
             ) : null}
           </div>
