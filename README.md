@@ -16,7 +16,23 @@ Mobile-first web app to review UFC weight classes, recent champions, fighter pro
 npm install
 npm run dev
 npm run build
+npm run preview
 ```
+
+## Deploy on Vercel
+
+This is a Vite SPA. `vercel.json` sets:
+
+- Framework: Vite (`build` → `dist`)
+- SPA rewrites so deep links (`/fighters/:id`, `/weight-finder`) resolve to `index.html`
+
+Import the GitHub repo at [vercel.com/new](https://vercel.com/new) or:
+
+```bash
+npx vercel
+```
+
+See [Vite on Vercel](https://vercel.com/docs/frameworks/frontend/vite).
 
 ## Data
 
