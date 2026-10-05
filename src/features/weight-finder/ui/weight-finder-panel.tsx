@@ -14,8 +14,9 @@ import {
 } from '@/shared/lib/units'
 import { Input } from '@/shared/ui/input'
 import { Label } from '@/shared/ui/label'
-import { ToggleGroup, ToggleGroupItem } from '@/shared/ui/toggle-group'
 import { Badge } from '@/shared/ui/badge'
+import { Button } from '@/shared/ui/button'
+import { cn } from '@/shared/lib/cn'
 
 type Unit = 'kg' | 'lb'
 
@@ -94,27 +95,34 @@ export function WeightFinderPanel() {
               Always shown in kg and lb
             </p>
           </div>
-          <ToggleGroup
-            type="single"
-            value={unit}
-            onValueChange={(value) => {
-              if (value === 'kg' || value === 'lb') {
-                if (weightKg != null) {
-                  setRaw(
-                    String(
-                      value === 'kg'
-                        ? roundWeight(weightKg)
-                        : roundWeight(kgToLb(weightKg)),
-                    ),
-                  )
-                }
-                setUnit(value)
-              }
-            }}
-          >
-            <ToggleGroupItem value="kg">kg</ToggleGroupItem>
-            <ToggleGroupItem value="lb">lb</ToggleGroupItem>
-          </ToggleGroup>
+          <div className="inline-flex items-center rounded-md border border-border bg-muted p-1">
+            {(['kg', 'lb'] as const).map((option) => (
+              <Button
+                key={option}
+                type="button"
+                size="sm"
+                variant="ghost"
+                className={cn(
+                  'h-8 min-w-12',
+                  unit === option && 'bg-card text-foreground shadow-sm',
+                )}
+                onClick={() => {
+                  if (weightKg != null) {
+                    setRaw(
+                      String(
+                        option === 'kg'
+                          ? roundWeight(weightKg)
+                          : roundWeight(kgToLb(weightKg)),
+                      ),
+                    )
+                  }
+                  setUnit(option)
+                }}
+              >
+                {option}
+              </Button>
+            ))}
+          </div>
         </div>
 
         <Input
@@ -138,16 +146,23 @@ export function WeightFinderPanel() {
 
         <div>
           <Label className="mb-2 block">Division ladder</Label>
-          <ToggleGroup
-            type="single"
-            value={gender}
-            onValueChange={(value) => {
-              if (value === 'men' || value === 'women') setGender(value)
-            }}
-          >
-            <ToggleGroupItem value="men">Men</ToggleGroupItem>
-            <ToggleGroupItem value="women">Women</ToggleGroupItem>
-          </ToggleGroup>
+          <div className="inline-flex items-center rounded-md border border-border bg-muted p-1">
+            {(['men', 'women'] as const).map((option) => (
+              <Button
+                key={option}
+                type="button"
+                size="sm"
+                variant="ghost"
+                className={cn(
+                  'h-8 min-w-16 capitalize',
+                  gender === option && 'bg-card text-foreground shadow-sm',
+                )}
+                onClick={() => setGender(option)}
+              >
+                {option}
+              </Button>
+            ))}
+          </div>
         </div>
       </section>
 

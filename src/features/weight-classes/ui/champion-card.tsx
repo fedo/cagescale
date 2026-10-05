@@ -17,8 +17,9 @@ export function ChampionCard({ champion, className }: ChampionCardProps) {
     <Link
       to="/fighters/$fighterId"
       params={{ fighterId: fighter.id }}
+      aria-label={`Open profile for ${fighter.name}`}
       className={cn(
-        'group flex w-[7.25rem] shrink-0 flex-col gap-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring',
+        'group relative z-0 flex w-[7.25rem] shrink-0 cursor-pointer flex-col gap-2 rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring',
         className,
       )}
     >
