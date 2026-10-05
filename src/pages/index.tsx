@@ -1,6 +1,7 @@
 import { useQuery } from '@tanstack/react-query'
 import { createFileRoute } from '@tanstack/react-router'
-import { useEffect } from 'react'
+import { useEffect, useMemo } from 'react'
+import { useGender } from '@/app/providers/gender-provider'
 import {
   getWeightClasses,
   weightClassesQueryKey,
@@ -13,10 +14,16 @@ export const Route = createFileRoute('/')({
 })
 
 function WeightClassesPage() {
+  const { gender } = useGender()
   const { data, isLoading, isError } = useQuery({
     queryKey: weightClassesQueryKey,
     queryFn: getWeightClasses,
   })
+
+  const divisions = useMemo(
+    () => data?.filter((wc) => wc.gender === gender) ?? [],
+    [data, gender],
+  )
 
   useEffect(() => {
     const hash = window.location.hash.replace('#', '')
@@ -45,7 +52,7 @@ function WeightClassesPage() {
       ) : null}
 
       <div>
-        {data?.map((weightClass) => (
+        {divisions.map((weightClass) => (
           <div key={weightClass.id} id={weightClass.id}>
             <WeightClassSection weightClass={weightClass} />
           </div>

@@ -1,9 +1,9 @@
 import { useMemo, useState } from 'react'
+import { useGender } from '@/app/providers/gender-provider'
 import {
   classesForGender,
   findWeightClassNeighborhood,
 } from '@/entities/weight-class/lib/find-class'
-import type { Gender } from '@/entities/weight-class/model/types'
 import { estimateBodyComp } from '@/features/weight-finder/lib/estimates'
 import {
   formatDualFromKg,
@@ -20,39 +20,51 @@ import { cn } from '@/shared/lib/cn'
 
 type Unit = 'kg' | 'lb'
 
-function ClassRow({
+function ClassColumn({
   label,
   name,
   limitLb,
   highlight,
+  empty,
 }: {
   label: string
-  name: string
-  limitLb: number
+  name?: string
+  limitLb?: number
   highlight?: boolean
+  empty?: boolean
 }) {
   return (
     <div
-      className={
+      className={cn(
+        'flex min-h-full flex-col rounded-md px-2 py-3 sm:px-3',
         highlight
-          ? 'rounded-md border border-primary/30 bg-primary/5 px-3 py-3'
-          : 'rounded-md bg-muted/60 px-3 py-3'
-      }
+          ? 'border border-primary/30 bg-primary/5'
+          : 'bg-muted/60',
+        empty && 'opacity-60',
+      )}
     >
-      <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+      <p className="text-[0.65rem] font-semibold uppercase leading-tight tracking-wide text-muted-foreground sm:text-xs">
         {label}
       </p>
-      <p className="font-display mt-1 text-xl text-foreground">{name}</p>
-      <p className="mt-0.5 text-sm text-muted-foreground">
-        Limit {formatDualFromLb(limitLb)}
-      </p>
+      {name && limitLb != null ? (
+        <>
+          <p className="font-display mt-1.5 text-sm leading-tight text-foreground sm:text-base">
+            {name}
+          </p>
+          <p className="mt-1 text-[0.7rem] leading-snug text-muted-foreground sm:text-xs">
+            {formatDualFromLb(limitLb)}
+          </p>
+        </>
+      ) : (
+        <p className="mt-2 text-xs text-muted-foreground">—</p>
+      )}
     </div>
   )
 }
 
 export function WeightFinderPanel() {
+  const { gender } = useGender()
   const [unit, setUnit] = useState<Unit>('kg')
-  const [gender, setGender] = useState<Gender>('men')
   const [raw, setRaw] = useState('77')
 
   const parsed = Number.parseFloat(raw)
@@ -143,32 +155,6 @@ export function WeightFinderPanel() {
         ) : (
           <p className="text-sm text-muted-foreground">Enter a valid weight.</p>
         )}
-
-        <div>
-          <Label className="mb-2 block">Division ladder</Label>
-          <div className="inline-flex items-center rounded-md border border-border bg-muted p-1">
-            {(
-              [
-                { id: 'men', label: 'Men' },
-                { id: 'women', label: 'Women' },
-              ] as const
-            ).map((option) => (
-              <Button
-                key={option.id}
-                type="button"
-                size="sm"
-                variant="ghost"
-                className={cn(
-                  'h-8 min-w-16',
-                  gender === option.id && 'bg-card text-foreground shadow-sm',
-                )}
-                onClick={() => setGender(option.id)}
-              >
-                {option.label}
-              </Button>
-            ))}
-          </div>
-        </div>
       </section>
 
       {neighborhood && weightKg != null ? (
@@ -177,35 +163,31 @@ export function WeightFinderPanel() {
           {neighborhood.overHeavy && ladder.length > 0 ? (
             <p className="text-sm text-muted-foreground">
               Above {ladder[ladder.length - 1]!.name} limit (
-              {formatDualFromLb(ladder[ladder.length - 1]!.limitLb)}). For men&apos;s
-              heavyweight, athletes may still compete up to that division&apos;s ceiling.
+              {formatDualFromLb(ladder[ladder.length - 1]!.limitLb)}).
             </p>
           ) : null}
 
-          {neighborhood.above ? (
-            <ClassRow
-              label="One above"
-              name={neighborhood.above.name}
-              limitLb={neighborhood.above.limitLb}
+          <div className="grid grid-cols-3 gap-2">
+            <ClassColumn
+              label="Above"
+              name={neighborhood.above?.name}
+              limitLb={neighborhood.above?.limitLb}
+              empty={!neighborhood.above}
             />
-          ) : null}
-
-          {neighborhood.match ? (
-            <ClassRow
-              label="Your weight class"
-              name={neighborhood.match.name}
-              limitLb={neighborhood.match.limitLb}
-              highlight
+            <ClassColumn
+              label="You"
+              name={neighborhood.match?.name}
+              limitLb={neighborhood.match?.limitLb}
+              highlight={Boolean(neighborhood.match)}
+              empty={!neighborhood.match}
             />
-          ) : null}
-
-          {neighborhood.below ? (
-            <ClassRow
-              label="One below"
-              name={neighborhood.below.name}
-              limitLb={neighborhood.below.limitLb}
+            <ClassColumn
+              label="Below"
+              name={neighborhood.below?.name}
+              limitLb={neighborhood.below?.limitLb}
+              empty={!neighborhood.below}
             />
-          ) : null}
+          </div>
         </section>
       ) : null}
 

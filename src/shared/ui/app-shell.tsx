@@ -1,5 +1,6 @@
-import { Link } from '@tanstack/react-router'
+import { Link, useRouterState } from '@tanstack/react-router'
 import type { ReactNode } from 'react'
+import { GenderNav } from '@/shared/ui/gender-nav'
 import { cn } from '@/shared/lib/cn'
 
 const nav = [
@@ -8,20 +9,39 @@ const nav = [
 ] as const
 
 export function AppShell({ children }: { children: ReactNode }) {
+  const pathname = useRouterState({ select: (s) => s.location.pathname })
+  const showGenderNav = pathname === '/' || pathname === '/weight-finder'
+
   return (
-    <div className="mx-auto flex min-h-dvh w-full max-w-lg flex-col px-4 pb-24 pt-4 sm:max-w-2xl sm:px-6">
-      <header className="animate-fade mb-6 flex items-end justify-between gap-4">
-        <div>
-          <p className="font-display text-3xl leading-none text-foreground sm:text-4xl">
-            CageScale
-          </p>
-          <p className="mt-1 text-sm text-muted-foreground">
-            UFC weight classes, champions & cuts
-          </p>
+    <div className="mx-auto flex min-h-dvh w-full max-w-lg flex-col sm:max-w-2xl">
+      <header className="fixed inset-x-0 top-0 z-30 border-b border-border/80 bg-card/95 backdrop-blur-md">
+        <div className="mx-auto max-w-lg px-4 pb-3 pt-3 sm:max-w-2xl sm:px-6">
+          <div className="flex items-end justify-between gap-4">
+            <div>
+              <p className="font-display text-3xl leading-none text-foreground sm:text-4xl">
+                CageScale
+              </p>
+              <p className="mt-1 text-sm text-muted-foreground">
+                UFC weight classes, champions & cuts
+              </p>
+            </div>
+          </div>
+          {showGenderNav ? (
+            <div className="mt-3">
+              <GenderNav />
+            </div>
+          ) : null}
         </div>
       </header>
 
-      <main className="flex-1">{children}</main>
+      <main
+        className={cn(
+          'flex-1 px-4 pb-24 pt-4 sm:px-6',
+          showGenderNav ? 'pt-[8.75rem] sm:pt-[9rem]' : 'pt-[5.25rem] sm:pt-[5.5rem]',
+        )}
+      >
+        {children}
+      </main>
 
       <nav
         className="fixed inset-x-0 bottom-0 z-20 border-t border-border/80 bg-card/95 backdrop-blur-md"
