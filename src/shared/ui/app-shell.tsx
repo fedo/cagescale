@@ -24,24 +24,31 @@ export function AppShell({ children }: { children: ReactNode }) {
       <header className="fixed inset-x-0 top-0 z-30 border-b border-border/80 bg-card/95 backdrop-blur-md">
         <div className="mx-auto max-w-lg px-4 pb-3 pt-3 sm:max-w-2xl sm:px-6">
           <div className="flex items-center justify-between gap-3">
-            <div className="flex min-w-0 items-center gap-2.5">
+            <div className="flex min-w-0 flex-1 items-center gap-2.5">
               <img
                 src="/logo.png"
-                alt="CageScale"
+                alt=""
                 width={942}
                 height={878}
                 className="h-[3.375rem] w-auto max-h-[calc(87px-1.5rem-1px)] shrink-0 object-contain sm:h-[3.75rem]"
               />
-              <p className="min-w-0 text-sm leading-snug text-muted-foreground">
-                UFC weight classes, champions & cuts
-              </p>
+              <div className="@container min-w-0 flex-1">
+                <p className="font-display text-[clamp(1rem,16cqi,1.875rem)] leading-none whitespace-nowrap sm:text-4xl">
+                  <span className="text-foreground">UFC</span>
+                  <span className="text-[#3d4450]">Cage</span>
+                  <span className="text-primary">Scale</span>
+                </p>
+                <p className="mt-1 text-sm text-muted-foreground">
+                  UFC weight classes, champions & cuts
+                </p>
+              </div>
             </div>
             {showHeaderControls ? <HeaderControls /> : null}
           </div>
         </div>
       </header>
 
-      <main className="flex-1 px-4 pb-28 pt-[5.5rem] sm:px-6 sm:pt-[5.75rem]">
+      <main className="flex-1 px-4 pb-28 pt-[6.5rem] sm:px-6 sm:pt-[5.75rem]">
         {children}
       </main>
 
