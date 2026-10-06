@@ -1,4 +1,12 @@
-import { useEffect, useMemo, useState, type ReactNode } from 'react'
+import { Minus, Plus } from 'lucide-react'
+import {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  type ReactNode,
+} from 'react'
 import { useGender } from '@/app/providers/gender-provider'
 import { useWeightUnit } from '@/app/providers/weight-unit-provider'
 import {
@@ -8,9 +16,13 @@ import {
 import { estimateBodyComp } from '@/features/weight-finder/lib/estimates'
 import { kgToLb, lbToKg, roundWeight } from '@/shared/lib/units'
 import { DualWeightFromKg, DualWeightFromLb, DualWeightRange } from '@/shared/ui/dual-weight'
+import { Button } from '@/shared/ui/button'
 import { Input } from '@/shared/ui/input'
 import { Label } from '@/shared/ui/label'
 import { cn } from '@/shared/lib/cn'
+
+const WEIGHT_STEP_DELAY_MS = 250
+const MIN_WEIGHT = 1
 
 function ClassColumn({
   label,
@@ -83,6 +95,51 @@ export function WeightFinderPanel() {
   const { gender } = useGender()
   const { unit } = useWeightUnit()
   const [raw, setRaw] = useState('77')
+  const stepTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+
+  const applyWeightStep = useCallback(
+    (direction: 1 | -1, magnitude: 1 | 5) => {
+      setRaw((prev) => {
+        const current = Number.parseFloat(prev)
+        const fallback = unit === 'kg' ? 77 : 170
+        const base =
+          Number.isFinite(current) && current >= MIN_WEIGHT ? current : fallback
+        const next = roundWeight(
+          Math.max(MIN_WEIGHT, base + direction * magnitude),
+        )
+        return String(next)
+      })
+    },
+    [unit],
+  )
+
+  const scheduleWeightStep = useCallback(
+    (direction: 1 | -1) => {
+      if (stepTimerRef.current) clearTimeout(stepTimerRef.current)
+      stepTimerRef.current = setTimeout(() => {
+        applyWeightStep(direction, 1)
+        stepTimerRef.current = null
+      }, WEIGHT_STEP_DELAY_MS)
+    },
+    [applyWeightStep],
+  )
+
+  const weightStepNow = useCallback(
+    (direction: 1 | -1, magnitude: 1 | 5) => {
+      if (stepTimerRef.current) {
+        clearTimeout(stepTimerRef.current)
+        stepTimerRef.current = null
+      }
+      applyWeightStep(direction, magnitude)
+    },
+    [applyWeightStep],
+  )
+
+  useEffect(() => {
+    return () => {
+      if (stepTimerRef.current) clearTimeout(stepTimerRef.current)
+    }
+  }, [])
 
   const parsed = Number.parseFloat(raw)
   const valid = Number.isFinite(parsed) && parsed > 0
@@ -133,16 +190,49 @@ export function WeightFinderPanel() {
           </p>
         </div>
 
-        <Input
-          id="weight"
-          inputMode="decimal"
-          type="number"
-          min={1}
-          step="0.1"
-          value={raw}
-          onChange={(event) => setRaw(event.target.value)}
-          placeholder={unit === 'kg' ? 'e.g. 77' : 'e.g. 170'}
-        />
+        <div className="flex gap-2">
+          <Button
+            type="button"
+            variant="outline"
+            size="icon"
+            className="h-11 w-11 shrink-0"
+            aria-label="Decrease weight by 1. Double-click to decrease by 5."
+            title="−1 (double-click −5)"
+            onClick={() => scheduleWeightStep(-1)}
+            onDoubleClick={(event) => {
+              event.preventDefault()
+              weightStepNow(-1, 5)
+            }}
+          >
+            <Minus className="size-5" aria-hidden />
+          </Button>
+          <Input
+            id="weight"
+            inputMode="decimal"
+            type="number"
+            min={MIN_WEIGHT}
+            step="0.1"
+            value={raw}
+            onChange={(event) => setRaw(event.target.value)}
+            placeholder={unit === 'kg' ? 'e.g. 77' : 'e.g. 170'}
+            className="text-center tabular-nums"
+          />
+          <Button
+            type="button"
+            variant="outline"
+            size="icon"
+            className="h-11 w-11 shrink-0"
+            aria-label="Increase weight by 1. Double-click to increase by 5."
+            title="+1 (double-click +5)"
+            onClick={() => scheduleWeightStep(1)}
+            onDoubleClick={(event) => {
+              event.preventDefault()
+              weightStepNow(1, 5)
+            }}
+          >
+            <Plus className="size-5" aria-hidden />
+          </Button>
+        </div>
 
         {weightKg != null && weightLb != null ? (
           <DualWeightFromKg weightKg={weightKg} size="base" />
