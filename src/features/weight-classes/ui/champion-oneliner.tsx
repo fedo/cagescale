@@ -19,11 +19,6 @@ export function ChampionOneliner({ champions }: ChampionOnelinerProps) {
       {champions.map((champion, index) => {
         const fighter = fightersById[champion.fighterId]
         if (!fighter) return null
-        const suffix = champion.isCurrent
-          ? champion.isInterim
-            ? ' · interim'
-            : ' · champ'
-          : ''
         return (
           <span key={`${champion.fighterId}-${champion.latestReignYear}`}>
             {index > 0 ? ', ' : null}
@@ -37,8 +32,7 @@ export function ChampionOneliner({ champions }: ChampionOnelinerProps) {
             </Link>
             <span>
               {' '}
-              ({champion.firstTitleYear}
-              {suffix}; {formatHeightDual(fighter.heightCm)})
+              ({champion.firstTitleYear}; {formatHeightDual(fighter.heightCm)})
             </span>
           </span>
         )

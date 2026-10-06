@@ -1,7 +1,6 @@
 import { Link } from '@tanstack/react-router'
 import { fightersById } from '@/entities/fighter/model/data'
 import type { ChampionReignSummary } from '@/entities/weight-class/model/types'
-import { Badge } from '@/shared/ui/badge'
 import { FighterHeight } from '@/shared/ui/fighter-height'
 import { FighterPhoto } from '@/shared/ui/fighter-photo'
 import { cn } from '@/shared/lib/cn'
@@ -34,11 +33,6 @@ export function ChampionCard({ champion, className }: ChampionCardProps) {
           height={116}
           className="aspect-square w-full object-cover transition-transform duration-300 group-hover:scale-105"
         />
-        {champion.isCurrent ? (
-          <Badge className="absolute left-1.5 top-1.5 text-[0.65rem]">
-            {champion.isInterim ? 'Interim' : 'Champ'}
-          </Badge>
-        ) : null}
       </div>
       <div>
         <p className="line-clamp-2 text-sm font-semibold leading-tight text-foreground">
