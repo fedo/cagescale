@@ -18,7 +18,7 @@ Lightweight ADR-style log. Append new entries at the **top**. Status: **Accepted
 
 **Context:** Optional local photos can be high resolution; small avatar hides detail.
 
-**Decision:** Fighter page portrait is a button: first tap expands full row width (4:3, max ~70vh); second tap collapses. State resets when `fighterId` changes.
+**Decision:** Fighter page portrait is a button: first tap expands to a **square** (full width on narrow viewports, capped ~70vh / 32rem and centered); second tap collapses. State resets when `fighterId` changes.
 
 **Consequences:** Divisions champion cards stay link-only thumbnails; expand is profile-only.
 
