@@ -11,11 +11,17 @@ import { useGender } from '@/app/providers/gender-provider'
 import { useWeightUnit } from '@/app/providers/weight-unit-provider'
 import {
   classesForGender,
+  distanceToLimitLb,
   findWeightClassNeighborhood,
 } from '@/entities/weight-class/lib/find-class'
 import { estimateBodyComp } from '@/features/weight-finder/lib/estimates'
 import { kgToLb, lbToKg, roundWeight } from '@/shared/lib/units'
-import { DualWeightFromKg, DualWeightFromLb, DualWeightRange } from '@/shared/ui/dual-weight'
+import {
+  DualWeightFromKg,
+  DualWeightFromLb,
+  DualWeightRange,
+  DualWeightSignedDelta,
+} from '@/shared/ui/dual-weight'
 import { Button } from '@/shared/ui/button'
 import { Input } from '@/shared/ui/input'
 import { Label } from '@/shared/ui/label'
@@ -28,15 +34,21 @@ function ClassColumn({
   label,
   name,
   limitLb,
+  weightLb,
   highlight,
   empty,
 }: {
   label: string
   name?: string
   limitLb?: number
+  weightLb?: number | null
   highlight?: boolean
   empty?: boolean
 }) {
+  const delta =
+    weightLb != null && limitLb != null
+      ? distanceToLimitLb(weightLb, limitLb)
+      : null
   return (
     <div
       className={cn(
@@ -58,6 +70,12 @@ function ClassColumn({
           <div className="mt-1">
             <DualWeightFromLb limitLb={limitLb} />
           </div>
+          {delta ? (
+            <DualWeightSignedDelta
+              deltaKg={delta.deltaKg}
+              deltaLb={delta.deltaLb}
+            />
+          ) : null}
         </>
       ) : (
         <p className="mt-2 text-xs text-muted-foreground">—</p>
@@ -256,12 +274,14 @@ export function WeightFinderPanel() {
               label="Above"
               name={neighborhood.above?.name}
               limitLb={neighborhood.above?.limitLb}
+              weightLb={weightLb}
               empty={!neighborhood.above}
             />
             <ClassColumn
               label="You"
               name={neighborhood.match?.name}
               limitLb={neighborhood.match?.limitLb}
+              weightLb={weightLb}
               highlight={Boolean(neighborhood.match)}
               empty={!neighborhood.match}
             />
@@ -269,6 +289,7 @@ export function WeightFinderPanel() {
               label="Below"
               name={neighborhood.below?.name}
               limitLb={neighborhood.below?.limitLb}
+              weightLb={weightLb}
               empty={!neighborhood.below}
             />
           </div>

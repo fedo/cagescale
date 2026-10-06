@@ -72,6 +72,55 @@ interface DualWeightRangeProps {
   className?: string
 }
 
+export function DualWeightSignedDelta({
+  deltaKg,
+  deltaLb,
+  className,
+  size = 'sm',
+}: {
+  deltaKg: number
+  deltaLb: number
+  className?: string
+  size?: 'sm' | 'base'
+}) {
+  const { unit } = useWeightUnit()
+
+  if (deltaLb === 0) {
+    return (
+      <p
+        className={cn(
+          'text-muted-foreground tabular-nums',
+          size === 'sm' ? 'text-[0.65rem]' : 'text-xs',
+          className,
+        )}
+      >
+        At limit
+      </p>
+    )
+  }
+
+  const sign = deltaLb > 0 ? '+' : '−'
+  const absKg = roundWeight(Math.abs(deltaKg))
+  const absLb = roundWeight(Math.abs(deltaLb))
+  const primary =
+    unit === 'kg' ? `${sign}${absKg} kg` : `${sign}${absLb} lb`
+  const secondary =
+    unit === 'kg' ? `${sign}${absLb} lb` : `${sign}${absKg} kg`
+
+  return (
+    <p
+      className={cn(
+        'mt-1 tabular-nums leading-tight',
+        size === 'sm' ? 'text-[0.65rem]' : 'text-xs',
+        className,
+      )}
+    >
+      <span className="font-semibold text-foreground">{primary}</span>
+      <span className="text-muted-foreground"> / {secondary}</span>
+    </p>
+  )
+}
+
 export function DualWeightRange({
   kgMin,
   kgMax,
