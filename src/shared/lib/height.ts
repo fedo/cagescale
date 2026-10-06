@@ -8,5 +8,5 @@ export function cmToFeetInches(cm: number): { feet: number; inches: number } {
 
 export function formatHeightDual(cm: number): string {
   const { feet, inches } = cmToFeetInches(cm)
-  return `${cm} cm / ${feet}'${inches}"`
+  return `${feet}'${inches}" / ${cm} cm`
 }
