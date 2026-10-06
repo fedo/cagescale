@@ -84,7 +84,7 @@ function FighterProfilePage() {
             className={cn(
               'object-cover transition-[width,height] duration-300 ease-out',
               photoExpanded
-                ? 'aspect-[4/3] h-auto w-full max-h-[min(70vh,32rem)]'
+                ? 'aspect-square h-auto w-full max-h-[min(70vh,32rem)] max-w-[min(70vh,32rem)] mx-auto'
                 : 'h-28 w-28',
             )}
           />
