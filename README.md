@@ -2,6 +2,16 @@
 
 Mobile-first web app to review UFC weight classes, recent champions, fighter profiles, and where your walk-around weight fits.
 
+## Documentation
+
+| Doc | Purpose |
+|-----|---------|
+| [PRODUCT.md](PRODUCT.md) | Requirements and product iteration recap |
+| [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) | Code structure, routes, data flow |
+| [docs/DECISIONS.md](docs/DECISIONS.md) | Decision log (ADR-style) |
+| [AGENTS.md](AGENTS.md) | Cursor agent workflow + autowiring |
+| [.cursor/skills/cagescale/SKILL.md](.cursor/skills/cagescale/SKILL.md) | Project skill for agents |
+
 ## Stack
 
 - Vite + React + TypeScript

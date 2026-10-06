@@ -1,0 +1,19 @@
+---
+description: CageScale entity data — fighters, weight classes, champions, heights, photos
+globs: src/entities/**/*.ts,public/fighters_images/**
+alwaysApply: false
+---
+
+# CageScale data edits
+
+When changing fighter or division seed data:
+
+1. **Fighter id** must stay stable (kebab-case) — used in routes, `fighters_images`, and `fighter-heights.ts`.
+2. Every fighter in `data.ts` needs **`fighter-heights.ts`** entry (`heightCm`).
+3. Recent champions: update `entities/weight-class/model/champions.ts` (most recent first); keep `RECENT_CHAMPIONS_COUNT` in mind.
+4. Do not reintroduce UI that treats `isCurrent` / `isInterim` as user-facing “belt holder” labels.
+5. Optional photos: `public/fighters_images/{id}.webp` (jpg/jpeg/png also tried).
+
+After edits: `npm run build`.
+
+Log bulk lineage updates in [docs/DECISIONS.md](../../docs/DECISIONS.md) with research note.

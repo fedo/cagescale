@@ -1,0 +1,29 @@
+---
+description: CageScale global conventions — mobile UFC weight-class app (Vite, static data, dual units)
+alwaysApply: true
+---
+
+# CageScale
+
+Read before substantive edits: [PRODUCT.md](../../PRODUCT.md), [docs/ARCHITECTURE.md](../../docs/ARCHITECTURE.md).
+
+Use project skill: `.cursor/skills/cagescale/SKILL.md` when implementing features or data.
+
+## Invariants
+
+- Mobile-first; do not shrink bottom tab touch targets without reason.
+- Weights: always kg **and** lb; primary order from `WeightUnitProvider` (bold first).
+- Heights: cm / ft'in" via `FighterHeight` or `formatHeightDual`.
+- Do **not** show Champ, Interim, or “current champion” labels on division champion UI.
+- Fighter images: `FighterPhoto` + optional `public/fighters_images/{fighter-id}.*`.
+
+## Structure
+
+- Routes only in `src/pages/`.
+- Domain data in `src/entities/`; UI composition in `src/features/`.
+- No imports from `pages` into `entities`.
+
+## Quality
+
+- Run `npm run build` before finishing.
+- Significant product/architecture choices → append [docs/DECISIONS.md](../../docs/DECISIONS.md).
