@@ -42,7 +42,7 @@ Curated static seed (no live API). Sources researched Oct 2026:
 - [UFC.com athletes / titleholders](https://www.ufc.com/athletes)
 - [Wikipedia — List of UFC champions](https://en.wikipedia.org/wiki/List_of_UFC_champions)
 
-Champion photos use deterministic UI Avatars placeholders (swap `fighterAvatar` for CDN URLs later).
+Champion photos: drop files in [`public/fighters_images/`](public/fighters_images/) named `{fighter-id}.webp` (also tries `.jpg`, `.jpeg`, `.png`). Missing files fall back to UI Avatars initials. Example: `joshua-van.webp`.
 
 `RECENT_CHAMPIONS_COUNT` in `src/entities/weight-class/model/constants.ts` controls how many champions appear under each class (default **5**).
 

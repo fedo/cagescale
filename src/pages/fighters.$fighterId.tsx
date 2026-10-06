@@ -11,6 +11,7 @@ import { TimelineSection } from '@/features/fighter-profile/ui/timeline-section'
 import { WeightClassChips } from '@/features/fighter-profile/ui/weight-class-chips'
 import { WeightClassTimeline } from '@/features/fighter-profile/ui/weight-class-timeline'
 import { FighterHeight } from '@/shared/ui/fighter-height'
+import { FighterPhoto } from '@/shared/ui/fighter-photo'
 
 export const Route = createFileRoute('/fighters/$fighterId')({
   component: FighterProfilePage,
@@ -49,9 +50,10 @@ function FighterProfilePage() {
       </Link>
 
       <div className="flex items-start gap-4">
-        <img
-          src={data.imageUrl}
-          alt={data.name}
+        <FighterPhoto
+          fighterId={data.id}
+          name={data.name}
+          fallbackUrl={data.imageUrl}
           width={112}
           height={112}
           className="h-28 w-28 rounded-md object-cover"

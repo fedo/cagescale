@@ -3,6 +3,7 @@ import { fightersById } from '@/entities/fighter/model/data'
 import type { ChampionReignSummary } from '@/entities/weight-class/model/types'
 import { Badge } from '@/shared/ui/badge'
 import { FighterHeight } from '@/shared/ui/fighter-height'
+import { FighterPhoto } from '@/shared/ui/fighter-photo'
 import { cn } from '@/shared/lib/cn'
 
 interface ChampionCardProps {
@@ -25,13 +26,13 @@ export function ChampionCard({ champion, className }: ChampionCardProps) {
       )}
     >
       <div className="relative overflow-hidden rounded-md bg-accent">
-        <img
-          src={fighter.imageUrl}
-          alt={fighter.name}
+        <FighterPhoto
+          fighterId={fighter.id}
+          name={fighter.name}
+          fallbackUrl={fighter.imageUrl}
           width={116}
           height={116}
           className="aspect-square w-full object-cover transition-transform duration-300 group-hover:scale-105"
-          loading="lazy"
         />
         {champion.isCurrent ? (
           <Badge className="absolute left-1.5 top-1.5 text-[0.65rem]">
