@@ -23,20 +23,20 @@ export function AppShell({ children }: { children: ReactNode }) {
     <div className="mx-auto flex min-h-dvh w-full max-w-lg flex-col sm:max-w-2xl">
       <header className="fixed inset-x-0 top-0 z-30 border-b border-border/80 bg-card/95 backdrop-blur-md">
         <div className="mx-auto max-w-lg px-4 pb-3 pt-3 sm:max-w-2xl sm:px-6">
-          <div className="flex items-start justify-between gap-3">
-            <div className="min-w-0">
-              <p className="font-display text-3xl leading-none text-foreground sm:text-4xl">
-                CageScale
-              </p>
-              <p className="mt-1 text-sm text-muted-foreground">
+          <div className="flex items-center justify-between gap-3">
+            <div className="flex min-w-0 items-center gap-2.5">
+              <img
+                src="/logo.png"
+                alt="CageScale"
+                width={942}
+                height={878}
+                className="h-[3.375rem] w-auto max-h-[calc(87px-1.5rem-1px)] shrink-0 object-contain sm:h-[3.75rem]"
+              />
+              <p className="min-w-0 text-sm leading-snug text-muted-foreground">
                 UFC weight classes, champions & cuts
               </p>
             </div>
-            {showHeaderControls ? (
-              <div className="pt-0.5">
-                <HeaderControls />
-              </div>
-            ) : null}
+            {showHeaderControls ? <HeaderControls /> : null}
           </div>
         </div>
       </header>
