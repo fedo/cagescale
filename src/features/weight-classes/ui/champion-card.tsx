@@ -2,6 +2,7 @@ import { Link } from '@tanstack/react-router'
 import { fightersById } from '@/entities/fighter/model/data'
 import type { ChampionReignSummary } from '@/entities/weight-class/model/types'
 import { Badge } from '@/shared/ui/badge'
+import { FighterHeight } from '@/shared/ui/fighter-height'
 import { cn } from '@/shared/lib/cn'
 
 interface ChampionCardProps {
@@ -45,6 +46,10 @@ export function ChampionCard({ champion, className }: ChampionCardProps) {
         <p className="mt-0.5 text-xs text-muted-foreground">
           First belt {champion.firstTitleYear}
         </p>
+        <FighterHeight
+          heightCm={fighter.heightCm}
+          className="mt-0.5 block text-[0.65rem] leading-snug"
+        />
       </div>
     </Link>
   )

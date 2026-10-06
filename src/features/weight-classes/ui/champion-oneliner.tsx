@@ -1,6 +1,7 @@
 import { Link } from '@tanstack/react-router'
 import { fightersById } from '@/entities/fighter/model/data'
 import type { ChampionReignSummary } from '@/entities/weight-class/model/types'
+import { formatHeightDual } from '@/shared/lib/height'
 
 interface ChampionOnelinerProps {
   champions: ChampionReignSummary[]
@@ -37,7 +38,7 @@ export function ChampionOneliner({ champions }: ChampionOnelinerProps) {
             <span>
               {' '}
               ({champion.firstTitleYear}
-              {suffix})
+              {suffix}; {formatHeightDual(fighter.heightCm)})
             </span>
           </span>
         )

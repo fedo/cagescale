@@ -1,12 +1,13 @@
 import type { Fighter } from './types'
 import { fighterAvatar } from './avatar'
+import { fighterHeightCm } from './fighter-heights'
 
 /**
  * Curated fighter profiles for recent champions.
  * Records & timelines approximate public UFC history as of Oct 2026 research
  * (UFC.com athletes/weight-class pages + Wikipedia title lineages).
  */
-export const FIGHTERS: Fighter[] = [
+const FIGHTERS_RAW = [
   {
     id: 'ciryl-gane',
     name: 'Ciryl Gane',
@@ -1279,6 +1280,11 @@ export const FIGHTERS: Fighter[] = [
     ],
   },
 ]
+
+export const FIGHTERS: Fighter[] = FIGHTERS_RAW.map((fighter) => ({
+  ...fighter,
+  heightCm: fighterHeightCm(fighter.id),
+}))
 
 export const fightersById = Object.fromEntries(
   FIGHTERS.map((fighter) => [fighter.id, fighter]),

@@ -27,6 +27,8 @@ export interface Fighter {
   nickname?: string
   imageUrl: string
   country: string
+  /** Listed height in centimeters. */
+  heightCm: number
   record: FightRecord
   /** Weight classes competed in (primary first). */
   weightClassIds: WeightClassId[]

@@ -10,6 +10,7 @@ import { RankingTimeline } from '@/features/fighter-profile/ui/ranking-timeline'
 import { TimelineSection } from '@/features/fighter-profile/ui/timeline-section'
 import { WeightClassChips } from '@/features/fighter-profile/ui/weight-class-chips'
 import { WeightClassTimeline } from '@/features/fighter-profile/ui/weight-class-timeline'
+import { FighterHeight } from '@/shared/ui/fighter-height'
 
 export const Route = createFileRoute('/fighters/$fighterId')({
   component: FighterProfilePage,
@@ -63,6 +64,7 @@ function FighterProfilePage() {
             <p className="mt-1 text-sm text-muted-foreground">“{data.nickname}”</p>
           ) : null}
           <p className="mt-2 text-sm text-muted-foreground">{data.country}</p>
+          <FighterHeight heightCm={data.heightCm} className="mt-1 block text-sm" />
         </div>
       </div>
 
