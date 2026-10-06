@@ -48,7 +48,7 @@ export function AppShell({ children }: { children: ReactNode }) {
         </div>
       </header>
 
-      <main className="flex-1 px-4 pb-28 pt-[6.5rem] sm:px-6 sm:pt-[5.75rem]">
+      <main className="flex-1 px-4 pb-20 pt-[6.5rem] sm:px-6 sm:pt-[5.75rem]">
         {children}
       </main>
 
@@ -56,7 +56,7 @@ export function AppShell({ children }: { children: ReactNode }) {
         className="fixed inset-x-0 bottom-0 z-20 border-t border-border/80 bg-card/95 pb-[env(safe-area-inset-bottom,0px)] backdrop-blur-md"
         aria-label="Primary"
       >
-        <div className="mx-auto grid max-w-lg grid-cols-2 gap-1 px-2 py-2 sm:max-w-2xl sm:px-3">
+        <div className="mx-auto grid max-w-lg grid-cols-2 gap-1 px-2 py-1 sm:max-w-2xl sm:px-3">
           {nav.map((item) => {
             const Icon = item.icon
             return (
@@ -65,19 +65,19 @@ export function AppShell({ children }: { children: ReactNode }) {
                 to={item.to}
                 activeOptions={item.exact ? { exact: true } : undefined}
                 className={cn(
-                  'flex min-h-[3.5rem] flex-col items-center justify-center gap-1 rounded-lg px-4 py-3',
+                  'flex min-h-10 flex-col items-center justify-center gap-0.5 rounded-lg px-3 py-1',
                   'text-xs font-semibold text-muted-foreground transition-colors',
                   'active:bg-muted/80',
                 )}
                 activeProps={{
                   className: cn(
-                    'flex min-h-[3.5rem] flex-col items-center justify-center gap-1 rounded-lg px-4 py-3',
+                    'flex min-h-10 flex-col items-center justify-center gap-0.5 rounded-lg px-3 py-1',
                     'border border-primary/25 bg-primary/10 text-primary shadow-sm',
                     'text-xs font-semibold',
                   ),
                 }}
               >
-                <Icon className="h-5 w-5 shrink-0" strokeWidth={2.25} aria-hidden />
+                <Icon className="h-4 w-4 shrink-0" strokeWidth={2.25} aria-hidden />
                 <span>{item.label}</span>
               </Link>
             )
