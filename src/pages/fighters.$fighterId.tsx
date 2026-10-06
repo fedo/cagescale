@@ -1,4 +1,5 @@
 import { useQuery } from '@tanstack/react-query'
+import { useEffect, useState } from 'react'
 import { Link, createFileRoute } from '@tanstack/react-router'
 import { ArrowLeft } from 'lucide-react'
 import {
@@ -10,6 +11,7 @@ import { RankingTimeline } from '@/features/fighter-profile/ui/ranking-timeline'
 import { TimelineSection } from '@/features/fighter-profile/ui/timeline-section'
 import { WeightClassChips } from '@/features/fighter-profile/ui/weight-class-chips'
 import { WeightClassTimeline } from '@/features/fighter-profile/ui/weight-class-timeline'
+import { cn } from '@/shared/lib/cn'
 import { FighterHeight } from '@/shared/ui/fighter-height'
 import { FighterPhoto } from '@/shared/ui/fighter-photo'
 
@@ -19,6 +21,10 @@ export const Route = createFileRoute('/fighters/$fighterId')({
 
 function FighterProfilePage() {
   const { fighterId } = Route.useParams()
+  const [photoExpanded, setPhotoExpanded] = useState(false)
+  useEffect(() => {
+    setPhotoExpanded(false)
+  }, [fighterId])
   const { data, isLoading, isError } = useQuery({
     queryKey: fighterQueryKey(fighterId),
     queryFn: () => getFighter(fighterId),
@@ -49,15 +55,40 @@ function FighterProfilePage() {
         Divisions
       </Link>
 
-      <div className="flex items-start gap-4">
-        <FighterPhoto
-          fighterId={data.id}
-          name={data.name}
-          fallbackUrl={data.imageUrl}
-          width={112}
-          height={112}
-          className="h-28 w-28 rounded-md object-cover"
-        />
+      <div
+        className={cn(
+          'flex gap-4',
+          photoExpanded ? 'flex-col' : 'items-start',
+        )}
+      >
+        <button
+          type="button"
+          onClick={() => setPhotoExpanded((open) => !open)}
+          className={cn(
+            'overflow-hidden rounded-md border-0 bg-transparent p-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring',
+            photoExpanded
+              ? 'w-full cursor-zoom-out'
+              : 'shrink-0 cursor-zoom-in',
+          )}
+          aria-expanded={photoExpanded}
+          aria-label={
+            photoExpanded ? 'Show smaller fighter photo' : 'Enlarge fighter photo'
+          }
+        >
+          <FighterPhoto
+            fighterId={data.id}
+            name={data.name}
+            fallbackUrl={data.imageUrl}
+            width={photoExpanded ? 800 : 112}
+            height={photoExpanded ? 600 : 112}
+            className={cn(
+              'object-cover',
+              photoExpanded
+                ? 'aspect-[4/3] h-auto w-full max-h-[min(70vh,32rem)]'
+                : 'h-28 w-28',
+            )}
+          />
+        </button>
         <div className="min-w-0 flex-1">
           <h1 className="font-display text-3xl leading-none text-foreground">
             {data.name}
