@@ -28,8 +28,8 @@ export function AppShell({ children }: { children: ReactNode }) {
               <img
                 src="/logo.png"
                 alt=""
-                width={942}
-                height={878}
+                width={772}
+                height={887}
                 className="h-[3.375rem] w-auto max-h-[calc(87px-1.5rem-1px)] shrink-0 object-contain sm:h-[3.75rem]"
               />
               <div className="@container min-w-0 flex-1">
