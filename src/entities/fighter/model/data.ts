@@ -7,7 +7,7 @@ import { fighterHeightCm } from './fighter-heights'
  * Records & timelines approximate public UFC history as of Oct 2026 research
  * (UFC.com athletes/weight-class pages + Wikipedia title lineages).
  */
-const FIGHTERS_RAW = [
+const FIGHTERS_RAW: Omit<Fighter, 'heightCm'>[] = [
   {
     id: 'ciryl-gane',
     name: 'Ciryl Gane',
