@@ -203,9 +203,6 @@ export function WeightFinderPanel() {
       <section className="space-y-4">
         <div>
           <Label htmlFor="weight">Your weight ({unit})</Label>
-          <p className="mt-1 text-xs text-muted-foreground">
-            Both units shown below — primary from header toggle
-          </p>
         </div>
 
         <div className="flex gap-2">
