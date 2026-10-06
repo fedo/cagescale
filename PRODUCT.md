@@ -67,12 +67,15 @@ This document captures requirements and product ideas from the initial concept t
 - **Your class** and **Estimates** use **3-column** layouts (Above | You | Below; Bulk | Cut | Dehydrate).
 - Gender for ladder comes from **header Men/Women** (not a duplicate control on the page).
 - Input unit follows header **kg/lb** toggle.
+- **± steppers** on the weight field: single tap ±1 in the header unit; **double-click ±5** (no extra single steps).
+- **Your class** cards show signed **delta to each division limit** under the limit line (`+` gain / `−` cut, both units).
 
 ### Fighter profile
 
 - **Compact record grid**: up to **4 columns** on small screens (W/L/D/NC).
 - **Percentage** under each label (same small type, slightly darker than label).
 - **Listed height** on profile and champion surfaces (`cm / ft'in"`).
+- **Tap portrait** to expand **full-width** on its own row; tap again to restore thumbnail beside the name block.
 
 ### Media
 

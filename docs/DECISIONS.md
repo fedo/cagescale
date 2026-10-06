@@ -4,6 +4,26 @@ Lightweight ADR-style log. Append new entries at the **top**. Status: **Accepted
 
 ---
 
+## 2026-10-06 — My Weight steppers and class limit deltas
+
+**Context:** Users adjust walk-around weight frequently; class cards showed limits but not distance from entered weight.
+
+**Decision:** Flank the input with ± buttons (double-click steps by 5). Under each Your class limit, show signed delta via `distanceToLimitLb` and `DualWeightSignedDelta`.
+
+**Consequences:** Deltas are relative to division **limits**, not min make-weight; copy stays educational.
+
+---
+
+## 2026-10-06 — Fighter profile photo toggle
+
+**Context:** Optional local photos can be high resolution; small avatar hides detail.
+
+**Decision:** Fighter page portrait is a button: first tap expands full row width (4:3, max ~70vh); second tap collapses. State resets when `fighterId` changes.
+
+**Consequences:** Divisions champion cards stay link-only thumbnails; expand is profile-only.
+
+---
+
 ## 2026-10-06 — Product docs and agent autowiring
 
 **Context:** Requirements and UX rules lived in chat history; agents needed repeatable context without re-reading the full thread.

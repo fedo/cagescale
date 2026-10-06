@@ -65,7 +65,7 @@ function FighterProfilePage() {
           type="button"
           onClick={() => setPhotoExpanded((open) => !open)}
           className={cn(
-            'overflow-hidden rounded-md border-0 bg-transparent p-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring',
+            'overflow-hidden rounded-md border-0 bg-transparent p-0 transition-[width] duration-300 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring',
             photoExpanded
               ? 'w-full cursor-zoom-out'
               : 'shrink-0 cursor-zoom-in',
@@ -82,7 +82,7 @@ function FighterProfilePage() {
             width={photoExpanded ? 800 : 112}
             height={photoExpanded ? 600 : 112}
             className={cn(
-              'object-cover',
+              'object-cover transition-[width,height] duration-300 ease-out',
               photoExpanded
                 ? 'aspect-[4/3] h-auto w-full max-h-[min(70vh,32rem)]'
                 : 'h-28 w-28',
